@@ -51,7 +51,9 @@ func do() error {
 	caCertPool.AppendCertsFromPEM(caCert)
 
 	config := &tls.Config{
-		Certificates: []tls.Certificate{keyPair},
+		GetClientCertificate: func(cri *tls.CertificateRequestInfo) (*tls.Certificate, error) {
+			return &keyPair, nil
+		},
 		RootCAs:      caCertPool,
 		MinVersion:   tls.VersionTLS12, // TLSv1.2 and up is required
 		CipherSuites: ciphers,
